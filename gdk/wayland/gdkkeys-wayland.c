@@ -105,8 +105,9 @@ gdk_wayland_keymap_get_entries_for_keyval (GdkKeymap     *keymap,
     *n_keys = 1;
   if (keys)
     {
-      *keys = g_new0 (GdkKeymapKey, 1);
+      *keys = g_new0 (GdkKeymapKeyInternal, 1);
       (*keys)->keycode = keyval;
+      (*keys)->ref_count = 1;
     }
 
   return TRUE;
@@ -125,6 +126,7 @@ gdk_wayland_keymap_get_entries_for_keycode (GdkKeymap     *keymap,
     {
       *keys = g_new0 (GdkKeymapKey, 1);
       (*keys)->keycode = hardware_keycode;
+      (*keys)->ref_count = 1;
     }
   if (keyvals)
     {

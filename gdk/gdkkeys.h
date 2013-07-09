@@ -61,6 +61,31 @@ struct _GdkKeymapKey
   gint  level;
 };
 
+/**
+ * gdk_keymap_key_ref:
+ * @key: a #GdkKeymapKey
+ *
+ * Increase the reference count of @key, returning a new reference.
+ *
+ * Returns: a new reference to @key
+ *
+ * Since: 3.10
+ **/
+GdkKeymapKey * gdk_keymap_key_ref (GdkKeymapKey *key);
+
+/**
+ * gdk_keymap_key_unref:
+ * @key: a #GdkKeymapKey
+ *
+ * Decrease the reference count of @key, possibly freeing it.
+ *
+ * Since: 3.10
+ **/
+void gdk_keymap_key_unref (GdkKeymapKey *key);
+
+GType gdk_keymap_key_get_type (void);
+
+#define GDK_TYPE_KEYMAP_KEY (gdk_keymap_key_get_type ())
 
 #define GDK_TYPE_KEYMAP              (gdk_keymap_get_type ())
 #define GDK_KEYMAP(object)           (G_TYPE_CHECK_INSTANCE_CAST ((object), GDK_TYPE_KEYMAP, GdkKeymap))
@@ -95,6 +120,7 @@ gboolean       gdk_keymap_translate_keyboard_state (GdkKeymap           *keymap,
 						    gint                *effective_group,
 						    gint                *level,
 						    GdkModifierType     *consumed_modifiers);
+void           gdk_keymap_return_new_keyval_by_outparam (GdkKeymap *keymap, GdkKeymapKey *out); 
 gboolean       gdk_keymap_get_entries_for_keyval   (GdkKeymap           *keymap,
 						    guint                keyval,
 						    GdkKeymapKey       **keys,

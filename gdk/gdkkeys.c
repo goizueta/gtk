@@ -29,7 +29,6 @@
 #include "gdkdisplay.h"
 #include "gdkdisplaymanagerprivate.h"
 
-
 /**
  * SECTION:keys
  * @Short_description: Functions for manipulating keyboard codes
@@ -98,6 +97,31 @@
  * contains this keyval, however, so you don't normally need to call
  * gdk_keymap_translate_keyboard_state() just to get the keyval.
  */
+
+/**
+ * GDK_TYPE_KEYMAP_KEY:
+ *
+ * A boxed #GType corresponding to #GdkKeymapKey
+ *
+ * Since: 3.10
+ */
+G_DEFINE_BOXED_TYPE (GdkKeymapKey, gdk_keymap_key, gdk_keymap_key_ref, gdk_keymap_key_unref)
+
+GdkKeymapKey * gdk_keymap_key_ref (GdkKeymapKey *key)
+{
+  GdkKeymapKeyInternal *key_internal = (GdkKeymapKeyInternal *) key;
+  g_atomic_int_inc (&key_internal->ref_count);
+  return key;
+}
+
+void gdk_keymap_key_unref (GdkKeymapKey *key)
+{
+  GdkKeymapKeyInternal *key_internal = (GdkKeymapKeyInternal *) key;
+  if (g_atomic_int_dec_and_test (&key_internal->ref_count))
+    {
+      g_free (key);
+    }
+}
 
 
 enum {
@@ -395,6 +419,20 @@ gdk_keymap_get_modifier_state (GdkKeymap *keymap)
     return GDK_KEYMAP_GET_CLASS (keymap)->get_modifier_state (keymap);
 
   return 0;
+}
+
+/**
+ * gdk_keymap_return_new_keyval_by_outparam:
+ * @keymap: a #GdkKeymap
+ * @out: (out) (transfer full): return location
+ *     for #GdkKeymapKey
+ *
+ * Hello
+ */
+void gdk_keymap_return_new_keyval_by_outparam (GdkKeymap *keymap, GdkKeymapKey *out)
+{
+    out = (GdkKeymapKey *)g_new0(GdkKeymapKeyInternal, 1);
+    ((GdkKeymapKeyInternal *)out)->ref_count = 1;
 }
 
 /**

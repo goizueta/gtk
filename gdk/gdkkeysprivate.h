@@ -20,6 +20,13 @@
 
 #include "gdkkeys.h"
 
+typedef struct _GdkKeymapKeyInternal GdkKeymapKeyInternal;
+
+struct _GdkKeymapKeyInternal {
+  GdkKeymapKey key;
+  guint ref_count;
+};
+
 G_BEGIN_DECLS
 
 #define GDK_KEYMAP_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST ((klass), GDK_TYPE_KEYMAP, GdkKeymapClass))
